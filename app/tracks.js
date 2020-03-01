@@ -15,9 +15,7 @@ router.get('/', returnArtistTracks, async (req, res) => {
 router.post('/', async (req, res) => {
   const trackData = req.body;
   try {
-    const track = new Track(trackData);
-    track.save();
-
+    const track = await Track.create(trackData);
     res.send(track);
   } catch (error) {
     res.send(error)

@@ -38,9 +38,7 @@ router.post('/', upload.single('coverImage'), async (req, res) => {
   const albumData = req.body;
   try {
     if (req.file) albumData.coverImage = req.file.filename;
-    const album = new Album(albumData);
-    album.save();
-
+    const album = await Album.create(albumData);
     res.send(album);
   } catch (error) {
     res.send(error)

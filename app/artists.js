@@ -21,13 +21,11 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.post('/', upload.single('photo'), (req, res) => {
+router.post('/', upload.single('photo'), async (req, res) => {
   const artistData = req.body;
   try {
     if (req.file) artistData.photo = req.file.filename;
-    const artist = new Artist(artistData);
-    artist.save();
-
+    const artist = await Artist.create(artistData);
     res.send(artist);
   } catch (error) {
     res.status(400).send(error)
