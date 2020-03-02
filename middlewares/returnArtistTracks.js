@@ -2,15 +2,20 @@ const Track = require('../models/Track'),
   Album = require('../models/Album');
 
 module.exports = async (req, res, next) => {
-  if(req.query.artist) {
+  if (req.query.artist) {
     try {
+      let tracks = [];
       const albumData = await Album.find({
         artist: req.query.artist
       });
-      const artistTracks = await Track.find({
-        album: albumData[0]._id
+      (await Promise.all(albumData.map(album => {
+        return Track.find({
+          album: album._id
+        });
+      }))).forEach(tracksItem => {
+        tracks = [...tracks, ...tracksItem]
       });
-      res.send(artistTracks);
+      res.send(tracks);
     } catch (error) {
       res.json(error).status(400);
     }
