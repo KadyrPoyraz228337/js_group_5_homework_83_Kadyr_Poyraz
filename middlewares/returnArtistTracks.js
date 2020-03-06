@@ -4,17 +4,14 @@ const Track = require('../models/Track'),
 module.exports = async (req, res, next) => {
   if (req.query.artist) {
     try {
-      let tracks = [];
       const albumData = await Album.find({
         artist: req.query.artist
       });
-      (await Promise.all(albumData.map(album => {
+      const tracks = (await Promise.all(albumData.map(album => {
         return Track.find({
           album: album._id
         });
-      }))).forEach(tracksItem => {
-        tracks = [...tracks, ...tracksItem]
-      });
+      }))).flat();
       res.send(tracks);
     } catch (error) {
       res.json(error).status(400);
