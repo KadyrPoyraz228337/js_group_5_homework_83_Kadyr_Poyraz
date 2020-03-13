@@ -13,6 +13,11 @@ const mongoose = require('mongoose'),
     duration: {
       type: Number,
       required: true
+    },
+    trackNumber: {
+      type: Number,
+      required: true,
+      default: 1
     }
   }, {
     versionKey: false

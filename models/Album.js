@@ -11,7 +11,7 @@ const mongoose = require('mongoose'),
       required: true
     },
     dateOfRelease: {
-      type: String,
+      type: Number,
       required: true
     },
     coverImage: {

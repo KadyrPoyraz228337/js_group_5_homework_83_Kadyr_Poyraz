@@ -1,4 +1,5 @@
-const express = require('express'),
+const
+  express = require('express'),
   mongoose = require('mongoose'),
   config = require('./config'),
   artists = require('./routes/artists'),
