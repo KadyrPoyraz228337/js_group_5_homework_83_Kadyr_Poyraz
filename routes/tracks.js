@@ -5,6 +5,7 @@ const express = require('express'),
   Track = require('../models/Track'),
   router = express.Router();
 
+
 router.get('/', returnArtistTracks, returnAlbumTracks, async (req, res) => {
   try {
     const tracksData = await Track.find();
