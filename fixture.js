@@ -27,11 +27,13 @@ const run = async () => {
     await Track.create({
       title: 'Something track',
       album: aye,
-      duration: 5
+      duration: 5,
+      trackNumber: 1
     },{
       title: 'Something track 2',
       album: aye,
-      duration: 5
+      duration: 5,
+      trackNumber: 2
     });
 };
 
