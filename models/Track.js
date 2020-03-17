@@ -18,7 +18,8 @@ const mongoose = require('mongoose'),
       type: Number,
       required: true,
       default: 1
-    }
+    },
+    videoId: String
   }, {
     versionKey: false
   });

@@ -8,47 +8,62 @@ module.exports = class AuthService {
 
   async login(username, password) {
     return new Promise(async (resolve, reject) => {
-      const user = await User.findOne({username});
-      if (!user) {
-        throw new Error('Username or password not correct!');
-      } else {
-        const correctPassword = await argon2.verify(user.password, password);
-         if (!correctPassword) {
+      try {
+        const user = await User.findOne({username});
+        if (!user) {
           throw new Error('Username or password not correct!');
-        }
+        } else {
+          const correctPassword = await argon2.verify(user.password, password);
+          if (!correctPassword) {
+            throw new Error('Username or password not correct!');
+          }
 
-        const token = this.creteJwt(user);
-        await User.update({username}, {
-          token: token
-        });
-        resolve({
-          user: {
-            name: user.username
-          },
-          token
-        });
+          const token = this.creteJwt(user);
+          await User.update({username}, {
+            token: token
+          });
+          resolve({
+            user: {
+              username: user.username
+            },
+            token
+          });
+        }
+      } catch (e) {
+        reject(e)
       }
     })
   }
 
   async singUp(username, password) {
     return new Promise((async (resolve, reject) => {
-      const salt = crypto.randomBytes(32);
-      const hash = await argon2.hash(password, {salt});
-      const token = this.creteJwt({name: username});
+      try {
+        if(!password) {
+          return reject({message: 'User validation failed: password: Path `password` is required.'})
+        }
 
-      const user = await User.create({
-        username: username,
-        password: hash,
-        token: token
-      });
+        const salt = crypto.randomBytes(32);
+        const hash = await argon2.hash(password, {salt});
+        const token = this.creteJwt({name: username});
 
-      resolve({
-        user: {
-          name: user.username
-        },
-        token
-      })
+        const user = await User.create({
+          username: username,
+          password: hash,
+          token: token
+        });
+
+        resolve({
+          user: {
+            username: user.username
+          },
+          token
+        })
+      } catch (e) {
+        if(e.name === 'MongoError') {
+          return reject({message: 'A user with that username already exists'})
+        }
+        reject(e)
+      }
     }))
   }
 
@@ -59,4 +74,4 @@ module.exports = class AuthService {
       }
     }, 'AswQas4Rta_1', {expiresIn: '6h'})
   }
-}
+};

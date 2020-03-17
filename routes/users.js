@@ -3,7 +3,7 @@ const express = require('express'),
   router = express.Router();
 
 router.post('/', async (req, res) => {
-  const name = req.body.name,
+  const name = req.body.username,
     password = req.body.password;
   try {
     const service = new AuthUser;
@@ -25,7 +25,7 @@ router.post('/sessions', async (req, res) => {
     return res.send({token});
   } catch (error) {
     console.log(error);
-    return res.status(500).send({error: 'Internal server error!'});
+    return res.status(500).send(error);
   }
 });
 
