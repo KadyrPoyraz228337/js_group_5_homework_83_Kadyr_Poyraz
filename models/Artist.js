@@ -12,6 +12,16 @@ const mongoose = require('mongoose'),
     information: {
       type: String,
       required: true
+    },
+    published: {
+      type: Boolean,
+      required: true,
+      default: false
+    },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
     }
   }, {
     versionKey: false

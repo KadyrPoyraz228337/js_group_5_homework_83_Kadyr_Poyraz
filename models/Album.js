@@ -11,11 +11,21 @@ const mongoose = require('mongoose'),
       required: true
     },
     dateOfRelease: {
-      type: Number,
+      type: String,
       required: true
     },
     coverImage: {
       type: String,
+      required: true
+    },
+    published: {
+      type: Boolean,
+      required: true,
+      default: false
+    },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
       required: true
     }
   }, {

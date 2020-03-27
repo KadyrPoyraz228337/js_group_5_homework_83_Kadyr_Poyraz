@@ -19,7 +19,17 @@ const mongoose = require('mongoose'),
       required: true,
       default: 1
     },
-    videoId: String
+    videoId: String,
+    published: {
+      type: Boolean,
+      required: true,
+      default: false
+    },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
+    }
   }, {
     versionKey: false
   });

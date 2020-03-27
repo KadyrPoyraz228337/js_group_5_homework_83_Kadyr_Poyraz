@@ -18,17 +18,39 @@ module.exports = class AuthService {
             throw new Error('Username or password not correct!');
           }
 
-          const token = this.creteJwt(user);
+          const token = this.createJwt(user);
           await User.update({username}, {
             token: token
           });
           resolve({
             user: {
-              username: user.username
+              username: user.username,
+              role: user.role
             },
             token
           });
         }
+      } catch (e) {
+        reject(e)
+      }
+    })
+  }
+
+  async logout(token) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const message = {message: 'Logout success'};
+
+        if(!token) resolve(message);
+
+        const user = await User.findOne({token});
+
+        if(!user) resolve(message);
+
+        user.token = this.createJwt();
+        await user.save();
+
+        resolve(message);
       } catch (e) {
         reject(e)
       }
@@ -44,17 +66,18 @@ module.exports = class AuthService {
 
         const salt = crypto.randomBytes(32);
         const hash = await argon2.hash(password, {salt});
-        const token = this.creteJwt({name: username});
+        const token = this.createJwt({name: username});
 
         const user = await User.create({
           username: username,
           password: hash,
-          token: token
+          token: token,
         });
 
         resolve({
           user: {
-            username: user.username
+            username: user.username,
+            role: user.role
           },
           token
         })
@@ -67,7 +90,7 @@ module.exports = class AuthService {
     }))
   }
 
-  creteJwt(user) {
+  createJwt(user) {
     return jwt.sign({
       data: {
         name: user.name
