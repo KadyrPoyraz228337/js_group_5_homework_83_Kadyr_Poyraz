@@ -9,7 +9,7 @@ module.exports = class AuthService {
   async login(username, password) {
     return new Promise(async (resolve, reject) => {
       try {
-        const user = await User.findOne({username});
+        const user = await User.findOne({username: username});
         if (!user) {
           throw new Error('Username or password not correct!');
         } else {
@@ -22,13 +22,16 @@ module.exports = class AuthService {
           await User.update({username}, {
             token: token
           });
+
           resolve({
             user: {
               username: user.username,
-              role: user.role
+              displayName: user.displayName,
+              avatarImage: user.avatarImage,
+              role: user.role,
             },
             token
-          });
+          })
         }
       } catch (e) {
         reject(e)
@@ -57,7 +60,7 @@ module.exports = class AuthService {
     })
   }
 
-  async singUp(username, password) {
+  async singUp(username, displayName, password, avatarImage) {
     return new Promise((async (resolve, reject) => {
       try {
         if(!password) {
@@ -70,14 +73,18 @@ module.exports = class AuthService {
 
         const user = await User.create({
           username: username,
+          displayName: displayName,
           password: hash,
+          avatarImage: avatarImage,
           token: token,
         });
 
         resolve({
           user: {
             username: user.username,
-            role: user.role
+            displayName: user.displayName,
+            avatarImage: user.avatarImage,
+            role: user.role,
           },
           token
         })

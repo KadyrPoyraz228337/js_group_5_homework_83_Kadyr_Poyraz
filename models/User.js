@@ -15,7 +15,13 @@ const UserSchema = mongoose.Schema({
     default: 'user',
     enum: ['user','admin']
   },
-  token: String
+  displayName: {
+    type: String,
+    required: true
+  },
+  token: String,
+  facebookId: String,
+  avatarImage: String
 });
 
 module.exports = mongoose.model('User', UserSchema);
